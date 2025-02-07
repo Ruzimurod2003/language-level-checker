@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Webservice",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "main"
+    },
+    {
+      "name": "Model training",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "train"
+    }
+  ]
+}

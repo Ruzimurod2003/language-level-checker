@@ -1,0 +1,14 @@
+pydantic
+fastapi
+uvicorn[standard]
+python-dotenv
+openai
+python-multipart
+pydantic
+pika
+ffmpeg-python
+setuptools
+openai-whisper
+setuptools-rust
+torch
+supervisor

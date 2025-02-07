@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  language_level_checker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: language_level_checker
+    ports:
+      - "4376:4376"
+    volumes:
+      - ./:/app
+    depends_on:
+      - rabbitmq
+    networks:
+      - src_all_network
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.language_level_checker.rule=(Host(`mycareer-dev.esynergy.lv`) && PathPrefix(`/language_level_checker`) )"
+      - "traefik.http.middlewares.language_level_checker_cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT,POST,DELETE,PATCH"
+      - "traefik.http.middlewares.language_level_checker_cors.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.language_level_checker_cors.headers.accesscontrolalloworiginlist=*"
+      - "traefik.http.middlewares.language_level_checker_cors.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.language_level_checker_cors.headers.addvaryheader=true"
+      - "traefik.http.routers.language_level_checker.middlewares=language_level_checker_cors"
+      - "traefik.http.routers.language_level_checker.entrypoints=websecure"
+      - "traefik.http.routers.language_level_checker.tls=true"
+      # - "traefik.http.services.language_level_checker.loadBalancer.server.port=5327"
+      # - "traefik.http.routers.language_level_checker.service=language_level_checker"
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"    # RabbitMQ main port
+      - "15672:15672"  # RabbitMQ management plugin port
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: rabbitmq
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-log:/var/log/rabbitmq
+
+volumes:
+  rabbitmq-data:
+    driver: local
+  rabbitmq-log:
+    driver: local
+
+networks:
+  src_all_network:
+    external: true
